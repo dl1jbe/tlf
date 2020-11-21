@@ -23,6 +23,10 @@
 #define _SCORE_H
 #include <stdbool.h>
 
+extern bool new_point_scoring;
+void init_cnc_points();
+void add_continents_with_points(char *continents, int points);
+void add_countries_with_points(char *ctys, int points);
 int score(void);
 int score2(char *line);
 bool country_found(char prefix[]);

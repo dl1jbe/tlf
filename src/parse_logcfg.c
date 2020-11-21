@@ -43,6 +43,7 @@
 #include "setcontest.h"
 #include "startmsg.h"
 #include "tlf_curses.h"
+#include "score.h"
 #include "searchlog.h"
 
 #include <config.h>
@@ -95,6 +96,9 @@ int read_logcfg(void) {
     nodes = 0;
     node = 0;
     shortqsonr = 0;
+
+    new_point_scoring = false;
+    init_cnc_points();
 
     /* Disable CT Mode until CTCOMPATIBLE is defined. */
     ctcomp = 0;
@@ -585,7 +589,9 @@ int parse_logcfg(char *inputbuffer) {
 	"ALT_DK10",
 	"CALLMASTER",
 	"LAN_PORT",                     /* 264 */
-	"SECTION_MULT_ONCE"
+	"SECTION_MULT_ONCE",
+	"COUNTRY_POINTS",
+	"CONTINENT_POINTS"
     };
 
     char **fields;
@@ -1996,6 +2002,24 @@ int parse_logcfg(char *inputbuffer) {
 	}
 	case 265: {
 	    sectn_mult_once = 1;
+	    break;
+	}
+	case 266: { // COUNTRY_POINTS
+	    PARAMETER_NEEDED(teststring);
+	    new_point_scoring = true;
+	    gchar **list=g_strsplit(fields[1], ":", 2);
+	    int points = atoi(list[1]);
+	    add_countries_with_points(list[0], points);
+	    g_strfreev(list);
+	    break;
+	}
+	case 267: { // CONTINENT_POINTS
+	    PARAMETER_NEEDED(teststring);
+	    new_point_scoring = true;
+	    gchar **list=g_strsplit(fields[1], ":", 2);
+	    int points = atoi(list[1]);
+	    add_continents_with_points(list[0], points);
+	    g_strfreev(list);
 	    break;
 	}
 	default: {

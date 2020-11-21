@@ -21,7 +21,7 @@
  */
 
 /* ------------------------------------------------------------
- *     score
+ *     point scoring
  *
  *--------------------------------------------------------------*/
 
@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "dxcc.h"
 #include "focm.h"
 #include "globalvars.h"
 #include "getctydata.h"
@@ -42,7 +43,55 @@
 extern char countrylist[][6];
 extern char continent_multiplier_list[7][3];
 
+GHashTable *country_points;
+GHashTable *continent_points;
+
+bool new_point_scoring = false;
+
 int calc_continent(int zone);
+
+/* Country and Continent point handling */
+void init_cnc_points () {
+    if (country_points != NULL)
+	g_hash_table_destroy(country_points);
+    if (continent_points !=NULL)
+	g_hash_table_destroy(continent_points);
+    country_points = g_hash_table_new_full(g_str_hash, g_str_equal,
+	    g_free, NULL);
+    continent_points = g_hash_table_new_full(g_str_hash, g_str_equal,
+	    g_free, NULL);
+}
+
+void add_country_points(char * cty, int points) {
+    g_hash_table_insert(country_points,
+	    g_strdup(cty), GINT_TO_POINTER(points));
+}
+
+void add_continent_points(char *continent, int points) {
+    g_hash_table_insert(continent_points,
+	    g_strdup(continent), GINT_TO_POINTER(points));
+}
+
+void add_countries_with_points(char *ctys, int points) {
+    gchar **list =g_strsplit(ctys, ",", -1);
+    gchar **ptr = list;
+    while (*ptr != NULL) {
+	add_country_points(*ptr++, points);
+    }
+    g_strfreev(list);
+    new_point_scoring = true;
+}
+
+void add_continents_with_points(char *continents, int points) {
+    gchar **list =g_strsplit(continents, ",", -1);
+    gchar **ptr = list;
+    while (*ptr != NULL) {
+	add_continent_points(*ptr++, points);
+    }
+    g_strfreev(list);
+    new_point_scoring = true;
+}
+
 
 /* check if countrynr is in countrylist */
 bool is_in_countrylist(int countrynr) {
@@ -168,6 +217,23 @@ int scoreByMode() {
     }
 }
 
+int scoreByContinentOrCountry_New() {
+    int points = 0;
+
+    dxcc_data *dx = dxcc_by_index(countrynr);
+    if (g_hash_table_contains(continent_points, dx->continent)) {
+	points = GPOINTER_TO_INT(
+		g_hash_table_lookup(continent_points, dx->continent)
+		);
+    }
+    if (g_hash_table_contains(country_points, dx->pfx)) {
+	points = GPOINTER_TO_INT(
+		g_hash_table_lookup(country_points, dx->pfx)
+		);
+    }
+    return points;
+}
+
 /* Overwrite points with x if set */
 #define USE_IF_SET(x) do { \
 			if (x >= 0) \
@@ -191,6 +257,10 @@ int scoreByContinentOrCountry() {
 
     int points = 0;
     bool inCountryList = false;
+
+    if (new_point_scoring == true) {
+	return scoreByContinentOrCountry_New();
+    }
 
     inCountryList = exist_in_country_list();
 
