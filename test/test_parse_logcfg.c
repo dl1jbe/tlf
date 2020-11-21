@@ -19,6 +19,7 @@
 // OBJECT ../src/locator2longlat.o
 // OBJECT ../src/score.o
 // OBJECT ../src/qrb.o
+// OBJECT ../src/dxcc.o
 
 extern char *editor_cmd;
 extern int weight;
