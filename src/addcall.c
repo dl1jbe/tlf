@@ -117,7 +117,7 @@ int lookup_country_in_pfxnummult_array(int n) {
 }
 
 
-int addcall(struct qso_t *qso) {
+void addcall(struct qso_t *qso) {
 
     int cty, zone = 0;
     bool add_ok;
@@ -208,13 +208,11 @@ int addcall(struct qso_t *qso) {
     }
 
     addmult(current_qso);       /* for wysiwyg */
-
-    return cty;
 }
 
 /* ----------------------for network qso's-----------------------------------*/
 
-int addcall2(void) {
+void addcall_lan(void) {
 
     int cty, zone = 0;
     bool add_ok;
@@ -341,7 +339,5 @@ int addcall2(void) {
 
     free_qso(qso);
     qso = NULL;
-
-    return cty;
 }
 

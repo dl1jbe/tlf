@@ -121,7 +121,7 @@ void log_to_disk(int from_lan) {
 
 	total = total + score2(lan_logline);
 
-	addcall2();
+	addcall_lan();
 
 	store_qso(lan_logline);
     }
