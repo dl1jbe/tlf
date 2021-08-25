@@ -30,6 +30,7 @@
 #include <unistd.h>
 
 #include "addcall.h"
+#include "addmult.h"
 #include "addspot.h"
 #include "gettxinfo.h"
 #include "globalvars.h"		// Includes glib.h and tlf.h
@@ -92,6 +93,7 @@ void log_to_disk(int from_lan) {
 
 	current_qso = collect_qso_data();
 	addcall(current_qso);		/* add call to dupe list */
+	addmult(current_qso);
 
 	score_qso();
 	makelogline();

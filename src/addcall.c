@@ -206,8 +206,6 @@ void addcall(struct qso_t *qso) {
 	    }
 	}
     }
-
-    addmult(current_qso);       /* for wysiwyg */
 }
 
 /* ----------------------for network qso's-----------------------------------*/

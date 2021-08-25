@@ -87,6 +87,7 @@ void write_log_fm_cabr() {
     dupe = is_dupe(hiscall, bandinx, trxmode);
     current_qso = collect_qso_data();
     addcall(current_qso);   /* add call to worked list and check it for dupe */
+    addmult(current_qso);
     score_qso();
     makelogline();	    /* format logline */
     store_qso(logline4);
