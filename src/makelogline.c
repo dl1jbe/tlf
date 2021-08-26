@@ -271,7 +271,7 @@ void prepare_specific_part(void) {
     /* If WPX
      * -> add prefix to prefixes_worked and include new pfx in log line */
     new_pfx = 0;
-    if (!(pfxmultab == 1 && excl_add_veto == 1)) {
+    if (!(pfxmultab == 1 && add_veto)) {
 	/* add prefix, remember if new */
 	new_pfx = (add_pfx(wpx_prefix, bandinx) == 0);
     }

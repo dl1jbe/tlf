@@ -24,7 +24,7 @@
 
 #include "tlf.h"
 
-extern int excl_add_veto;
+extern bool add_veto;
 
 struct qso_t *collect_qso_data(void);
 bool check_veto(int countrynr);

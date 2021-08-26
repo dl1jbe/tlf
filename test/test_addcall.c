@@ -220,13 +220,13 @@ void test_addcall_continentlistonly(void **state) {
     current_qso = collect_qso_data();
     addcall(current_qso);
 
-    assert_int_equal(excl_add_veto, false);
+    assert_int_equal(add_veto, false);
     strcpy(hiscall, "PY2BBB");
 
     current_qso = collect_qso_data();
     addcall(current_qso);
 
-    assert_int_equal(excl_add_veto, true);
+    assert_int_equal(add_veto, true);
 }
 
 void test_addcall_exclude_continent(void **state) {
@@ -236,13 +236,13 @@ void test_addcall_exclude_continent(void **state) {
     current_qso = collect_qso_data();
     addcall(current_qso);
 
-    assert_int_equal(excl_add_veto, true);
+    assert_int_equal(add_veto, true);
     strcpy(hiscall, "PY2BBB");
 
     current_qso = collect_qso_data();
     addcall(current_qso);
 
-    assert_int_equal(excl_add_veto, false);
+    assert_int_equal(add_veto, false);
 }
 
 void test_addcall_exclude_country(void **state) {
@@ -252,13 +252,13 @@ void test_addcall_exclude_country(void **state) {
     current_qso = collect_qso_data();
     addcall(current_qso);
 
-    assert_int_equal(excl_add_veto, false);
+    assert_int_equal(add_veto, false);
     strcpy(hiscall, "DL1AAA");
 
     current_qso = collect_qso_data();
     addcall(current_qso);
 
-    assert_int_equal(excl_add_veto, true);
+    assert_int_equal(add_veto, true);
 }
 
 
@@ -593,29 +593,29 @@ void test_addcall_lan_continentlistonly(void **state) {
     continentlist_only = true;
     strcpy(lan_logline, logline_PY);
     addcall_lan();
-    assert_int_equal(excl_add_veto, true);
+    assert_int_equal(add_veto, true);
     strcpy(lan_logline, logline);
     addcall_lan();
-    assert_int_equal(excl_add_veto, false);
+    assert_int_equal(add_veto, false);
 }
 
 void test_addcall_lan_exclude_continent(void **state) {
     exclude_multilist_type = EXCLUDE_CONTINENT;
     strcpy(lan_logline, logline);
     addcall_lan();
-    assert_int_equal(excl_add_veto, true);
+    assert_int_equal(add_veto, true);
     strcpy(lan_logline, logline_PY);
     addcall_lan();
-    assert_int_equal(excl_add_veto, false);
+    assert_int_equal(add_veto, false);
 }
 
 void test_addcall_lan_exclude_country(void **state) {
     exclude_multilist_type = EXCLUDE_COUNTRY;
     strcpy(lan_logline, logline);
     addcall_lan();
-    assert_int_equal(excl_add_veto, false);
+    assert_int_equal(add_veto, false);
     strcpy(lan_logline, logline_DL);
     addcall_lan();
-    assert_int_equal(excl_add_veto, true);
+    assert_int_equal(add_veto, true);
 }
 

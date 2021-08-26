@@ -53,14 +53,14 @@
 #include "tlf.h"
 #include "zone_nr.h"
 
-int excl_add_veto;
-/* This variable helps to handle in other modules, that station is multiplier
+bool add_veto;
+/* This variable helps other modules in handling, if station is a multiplier
  * or not */
-/* In addcall2(), this variable helps to handle the excluded multipliers,
- * which came from lan_logline the Tlf scoring logic is totally completely
- * different in local and LAN source the addcall() function doesn't increment
- * the band_score[] array, that maintains the score() function. Here, the
- * addcall2() is need to separate the points and multipliers.
+/* In addcall_lan(), this variable helps to handle the excluded multipliers,
+ * which came from lan_logline. The Tlf scoring logic is totally completely
+ * different in local and LAN source. The addcall() function doesn't increment
+ * the band_score[] array, that remains the task of the score() function.
+ * Here, addcall_lan() needs to separate the points and multipliers.
  */
 
 
@@ -124,7 +124,7 @@ void addcall(struct qso_t *qso) {
     int pfxnumcntidx = -1;
     int pxnr = 0;
 
-    excl_add_veto = 0;
+    add_veto = false;
 
     int station = lookup_or_add_worked(qso->call);
     update_worked(station, qso);
@@ -164,12 +164,12 @@ void addcall(struct qso_t *qso) {
 
     if (continentlist_only) {
 	if (!is_in_continentlist(dxcc_by_index(cty)->continent)) {
-	    excl_add_veto = 1;
+	    add_veto = true;
 	}
     }
 
-    excl_add_veto |= check_veto(cty);
-    if (excl_add_veto) {
+    add_veto |= check_veto(cty);
+    if (add_veto) {
 	add_ok = false;
 	new_cty = 0;
 	new_zone = 0;
@@ -220,7 +220,7 @@ void addcall_lan(void) {
     int bandinx;
     int pfxnumcntidx = -1;
     int pxnr = 0;
-    excl_add_veto = 0;
+    add_veto = false;
 
     /* parse copy of lan_logline */
     struct qso_t *qso;
@@ -270,12 +270,12 @@ void addcall_lan(void) {
 
     if (continentlist_only) {
 	if (!is_in_continentlist(dxcc_by_index(cty)->continent)) {
-	    excl_add_veto = 1;
+	    add_veto = true;
 	}
     }
 
-    excl_add_veto |= check_veto(cty);
-    if (excl_add_veto) {
+    add_veto |= check_veto(cty);
+    if (add_veto) {
 	add_ok = false;
 	new_cty = 0;
 	addcallarea = 0;
@@ -287,7 +287,7 @@ void addcall_lan(void) {
 
 	worked[station].band |= inxes[bandinx];	/* worked on this band */
 
-	if (excl_add_veto == 0) {
+	if (!add_veto) {
 
 	    if (pfxnumcntidx < 0) {
 		if (cty != 0 && (countries[cty] & inxes[bandinx]) == 0) {
