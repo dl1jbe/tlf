@@ -206,12 +206,13 @@ int readcalls(const char *logfile) {
 	qso = parse_qso(inputbuffer);
 	bandindex = qso->bandindex;
 
-	/* get the country number, not known at this point */
-	countrynr = getctydata(qso->call);
 
 	/*  lookup worked stations, add if new */
 	int station = lookup_or_add_worked(qso->call);
 	update_worked(station, qso);
+
+	/* get the country number, not known at this point */
+	countrynr = getctydata(qso->call);
 
 
 	if (continentlist_only) {

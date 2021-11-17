@@ -116,6 +116,17 @@ int lookup_country_in_pfxnummult_array(int n) {
     return found;
 }
 
+/* Add call based information about current qso to database
+ *
+ * Register any station as worked (even if not allowed in contest). Remember
+ * country, actual exchange and timestamp per band. Do register band
+ * as worked ONLY for allowed contacts.
+ * (Sideeffect: These stations will not recognized as DUPE).
+ *
+ * Check if station is workable in contest (based on country and continent).
+ *
+ * Furthermore score band, zones and callarea for allowed contacts.
+ */
 
 void addcall(struct qso_t *qso) {
 
@@ -126,9 +137,9 @@ void addcall(struct qso_t *qso) {
 
     add_veto = false;
 
+    /* lookup worked station, add if new */
     int station = lookup_or_add_worked(qso->call);
     update_worked(station, qso);
-
 
     // can we get the ctydata from countrynr?
     cty = getctydata(qso->call);
@@ -183,7 +194,8 @@ void addcall(struct qso_t *qso) {
 
 
     if (add_ok) {
-	worked[station].band |= inxes[qso->bandindex];	/* worked on band */
+    	/* remember band as worked */
+	worked[station].band |= inxes[qso->bandindex];
 
 	if (pfxnumcntidx < 0) {
 	    if (cty != 0 && (countries[cty] & inxes[qso->bandindex]) == 0) {
