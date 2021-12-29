@@ -74,6 +74,8 @@ int init_tlf_rig(void) {
     const struct rig_caps *caps;
     value_t rig_cwspeed;
 
+    rig_set_debug(RIG_DEBUG_NONE);
+
     /*
      * allocate memory, setup & open port
      */
@@ -139,15 +141,6 @@ int init_tlf_rig(void) {
     }
 
     shownr("Freq =", (int) rigfreq);
-
-    // check if rig supports sending CW
-    if (cwkeyer == HAMLIB_KEYER) {
-	int retcode = hamlib_keyer_send("");
-	if (retcode != RIG_OK) {
-	    cwkeyer = NO_KEYER;
-	    showmsg("Sending Morse via Hamlib is not supported for that rig!");
-	}
-    }
 
     if (cwkeyer == HAMLIB_KEYER) {
 	retcode = rig_get_level(my_rig, RIG_VFO_CURR, RIG_LEVEL_KEYSPD, &rig_cwspeed); /* read cw speed from rig */

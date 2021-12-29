@@ -22,6 +22,14 @@
 #include "globalvars.h"
 #include "hamlib_keyer.h"
 
+bool rig_has_send_morse() {
+   return (my_rig->caps->send_morse != NULL);
+}
+
+bool rig_has_stop_morse() {
+    return (my_rig->caps->stop_morse != NULL);
+}
+
 int hamlib_keyer_send(char *cwmessage) {
     return rig_send_morse(my_rig, RIG_VFO_CURR, cwmessage);
 }
@@ -34,5 +42,9 @@ int hamlib_keyer_set_speed(int cwspeed) {
 }
 
 int hamlib_keyer_stop() {
-    return rig_stop_morse(my_rig, RIG_VFO_CURR);
+    if (rig_has_stop_morse()) {
+	return rig_stop_morse(my_rig, RIG_VFO_CURR);
+    } else {
+	return RIG_OK;
+    }
 }
