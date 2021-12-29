@@ -72,7 +72,7 @@ int init_tlf_rig(void) {
     dcd_type_t dcd_type = RIG_DCD_NONE;
 
     const struct rig_caps *caps;
-    value_t rig_cwspeed;
+    int rig_cwspeed;
 
     rig_set_debug(RIG_DEBUG_NONE);
 
@@ -143,11 +143,11 @@ int init_tlf_rig(void) {
     shownr("Freq =", (int) rigfreq);
 
     if (cwkeyer == HAMLIB_KEYER) {
-	retcode = rig_get_level(my_rig, RIG_VFO_CURR, RIG_LEVEL_KEYSPD, &rig_cwspeed); /* read cw speed from rig */
+	retcode = hamlib_keyer_get_speed(&rig_cwspeed); /* read cw speed from rig */
 
 	if (retcode == RIG_OK) {
-	    shownr("CW speed = ", (int) rig_cwspeed.i);
-	    SetCWSpeed(rig_cwspeed.i);
+	    shownr("CW speed = ", rig_cwspeed);
+	    SetCWSpeed(rig_cwspeed);
 	} else {
 	    TLF_LOG_WARN("Could not read CW speed from rig: %s", rigerror(retcode));
 	    if (!debugflag)

@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
+#include <assert.h>
 #include <hamlib/rig.h>
 
 #include "globalvars.h"
@@ -30,15 +31,25 @@ bool rig_has_stop_morse() {
     return (my_rig->caps->stop_morse != NULL);
 }
 
-int hamlib_keyer_send(char *cwmessage) {
-    return rig_send_morse(my_rig, RIG_VFO_CURR, cwmessage);
-}
-
 int hamlib_keyer_set_speed(int cwspeed) {
     value_t spd;
     spd.i = cwspeed;
 
     return rig_set_level(my_rig, RIG_VFO_CURR, RIG_LEVEL_KEYSPD, spd);
+}
+
+int hamlib_keyer_get_speed( int *cwspeed) {
+    value_t value;
+
+    assert (cwspeed != NULL);
+    int ret = rig_get_level(my_rig, RIG_VFO_CURR, RIG_LEVEL_KEYSPD, &value);
+    if (ret == RIG_OK)
+	*cwspeed = value.i;
+    return ret;
+}
+
+int hamlib_keyer_send(char *cwmessage) {
+    return rig_send_morse(my_rig, RIG_VFO_CURR, cwmessage);
 }
 
 int hamlib_keyer_stop() {

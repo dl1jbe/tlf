@@ -33,6 +33,7 @@
 #include "fldigixmlrpc.h"
 #include "gettxinfo.h"
 #include "globalvars.h"
+#include "hamlib_keyer.h"
 #include "tlf.h"
 #include "tlf_curses.h"
 #include "callinput.h"
@@ -191,12 +192,12 @@ void gettxinfo(void) {
 
 	/* read speed from rig */
 	if (cwkeyer == HAMLIB_KEYER) {
-	    value_t rig_cwspeed;
-	    retval = rig_get_level(my_rig, RIG_VFO_CURR, RIG_LEVEL_KEYSPD, &rig_cwspeed); /* initialize RIG_VFO_CURR */
+	    int rig_cwspeed;
+	    retval = hamlib_keyer_get_speed(&rig_cwspeed);
 
 	    if (retval == RIG_OK) {
-		if (GetCWSpeed() != rig_cwspeed.i) { // FIXME: doesn't work if rig speed is between the values from CW_SPEEDS
-		    SetCWSpeed(rig_cwspeed.i);
+		if (GetCWSpeed() != rig_cwspeed) { // FIXME: doesn't work if rig speed is between the values from CW_SPEEDS
+		    SetCWSpeed(rig_cwspeed);
 
 		    attron(COLOR_PAIR(C_HEADER) | A_STANDOUT);
 		    mvprintw(0, 14, "%2u", GetCWSpeed());
