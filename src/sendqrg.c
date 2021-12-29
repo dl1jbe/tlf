@@ -25,6 +25,7 @@
 #include "bands.h"
 #include "cw_utils.h"
 #include "err_utils.h"
+#include "hamlib_keyer.h"
 #include "sendqrg.h"
 #include "startmsg.h"
 #include "gettxinfo.h"
