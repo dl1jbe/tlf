@@ -28,7 +28,11 @@ bool rig_has_send_morse() {
 }
 
 bool rig_has_stop_morse() {
+#if HAMLIB_VERSION >= 400
     return (my_rig->caps->stop_morse != NULL);
+#else
+    return false;
+#endif
 }
 
 int hamlib_keyer_set_speed(int cwspeed) {

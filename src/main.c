@@ -843,7 +843,11 @@ static void keyer_init() {
 	    exit(EXIT_FAILURE);
 	}
 	if (!rig_has_stop_morse()) {
+#if HAMLIB_VERSION >= 400
 	    showmsg("Rig does not support stopping CW!!");
+#else
+	    showmsg("Hamlib version does not supprt stopping CW!!");
+#endif
 	    showmsg("Continue anyway Y/(N)?");
 	    if (toupper(key_get()) != 'Y') {
 		endwin();
