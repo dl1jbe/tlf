@@ -427,6 +427,7 @@ static bool_true_t bool_trues[] = {
     {"QTCREC_RECORD", &qtcrec_record},
     {"QTC_AUTO_FILLTIME", &qtc_auto_filltime},
     {"QTC_RECV_LAZY", &qtc_recv_lazy},
+    {"ESC_STOP_TX_ONLY", &stop_tx_only},
 };
 
 void test_bool_trues(void **state) {

@@ -197,13 +197,15 @@ int getexchange(void) {
 
 	    case ESCAPE: {                // <Escape>
 		stoptx();			/* stop sending CW */
-		if (comment[0] != '\0') {	/* if comment not empty */
-		    /* drop exchange so far */
-		    comment[0] = '\0';
-		    i = 0;
-		} else {
-		    /* back to callinput */
-		    x = TAB;	// <Tab>
+		if (!stop_tx_only) {
+		    if (comment[0] != '\0') {	/* if comment not empty */
+			/* drop exchange so far */
+			comment[0] = '\0';
+			i = 0;
+		    } else {
+			/* back to callinput */
+			x = TAB;	// <Tab>
+		    }
 		}
 		break;
 	    }

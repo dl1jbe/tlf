@@ -148,6 +148,7 @@ extern int cwkeyer;
 extern int digikeyer;
 extern int cwstart;
 extern int early_started;
+extern bool stop_tx_only;
 extern int zonedisplay;
 extern int rigptt;
 extern int k_ptt;

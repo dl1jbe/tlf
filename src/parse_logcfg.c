@@ -1252,7 +1252,7 @@ static config_t logcfg_configs[] = {
     {"DIGI_RIG_MODE",       NEED_PARAM, cfg_digi_rig_mode},
     {"CABRILLO-(.+)",       OPTIONAL_PARAM, cfg_cabrillo_field},
     {"RESEND_CALL",         NEED_PARAM, cfg_resend_call},
-
+    {"ESC_STOP_TX_ONLY",    CFG_BOOL_TRUE(stop_tx_only)},
     {NULL}  // end marker
 };
 
