@@ -777,7 +777,7 @@ int callinput(void) {
 	    // <Escape>, clear call input or stop sending.
 	    case ESCAPE: {
 		if (!stop_tx_only) {
-		    if (early_started == 0) {
+		    if (!early_started) {
 			/* if CW not started early drop call and start anew */
 			cleanup();
 			clear_display();
@@ -1060,10 +1060,10 @@ int autosend() {
     int x;
     int char_sent;
 
-    early_started = 1;
-    sending_call = 1;
+    early_started = true;
+    sending_call = true;
     sendmessage(hiscall);
-    sending_call = 0;
+    sending_call = false;
     strcpy(hiscall_sent, hiscall);
 
     char_sent = 0; 			/* no char sent so far */
@@ -1105,7 +1105,7 @@ int autosend() {
 	if (x == ESCAPE) {
 	    stoptx();
 	    *hiscall_sent = '\0';
-	    early_started = 0;
+	    early_started = false;
 	    continue;
 	}
 

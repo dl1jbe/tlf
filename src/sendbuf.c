@@ -179,8 +179,7 @@ void ExpandMacro(void) {
 	char *p = hiscall + strlen(hiscall_sent);
 	if (strlen(hiscall_sent) != 0) {
 	    hiscall_sent[0] = '\0';
-	    early_started = 0;
-//                              sending_call = 0;
+	    early_started = false;
 	}
 	if (cqmode == CQ && resend_call != RESEND_NOT_SET) {
 	    strcpy(sentcall, hiscall);
@@ -243,7 +242,7 @@ void sendbuf(void) {
 	ExpandMacro();
 
 	if (!simulator) {
-	    if (sending_call == 0)
+	    if (!sending_call)
 		add_to_keyer_terminal(buffer);
 	}
 
