@@ -774,6 +774,10 @@ int callinput(void) {
 		break;
 	    }
 
+	    case CTRL_W:
+		cleanup_hiscall();
+		break;
+
 	    // <Escape>, clear call input or stop sending.
 	    case ESCAPE: {
 		if (!stop_tx_only) {
