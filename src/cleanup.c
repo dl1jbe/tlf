@@ -68,8 +68,8 @@ void cleanup_hiscall(void) {
 void restore_hiscall(void) {
     if (call_backup) {
 	g_strlcpy(hiscall, call_backup, sizeof(hiscall));
-	g_free(comment_backup);
-	comment_backup = NULL;
+	g_free(call_backup);
+	call_backup = NULL;
     }
     get_proposed_exchange();
 }
