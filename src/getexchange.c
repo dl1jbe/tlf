@@ -197,9 +197,14 @@ int getexchange(void) {
 	    }
 
 	    case CTRL_W: {
-		/* wipe out exchange field */
-		cleanup_comment();
-		i = 0;
+		/* wipe out or restore exchange field */
+		if (comment[0] != '\0') {
+		    cleanup_comment();
+		    i = 0;
+		} else {
+		    restore_comment();
+		    i = strlen(comment);
+		}
 		break;
 	    }
 

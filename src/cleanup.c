@@ -23,29 +23,68 @@
  *--------------------------------------------------------------*/
 
 
+#include <stdbool.h>
+
+#include "getexchange.h"
 #include "globalvars.h"
 #include "change_rst.h"
+#include "recall_exchange.h"
 #include "tlf_curses.h"
 #include "ui_utils.h"
 #include "write_keyer.h"
 
+gchar *comment_backup = NULL;
+gchar *call_backup = NULL;
+
 /* reset comment */
 void cleanup_comment(void) {
+    g_free(comment_backup);
+    comment_backup = g_strdup(comment);
+
     comment[0] = '\0';
     normalized_comment[0] = '\0';
 }
 
+/* restore comment */
+void restore_comment(void) {
+    if (comment_backup) {
+	g_strlcpy(comment, comment_backup, sizeof(comment));
+	g_free(comment_backup);
+	comment_backup = NULL;
+    }
+    checkexchange(comment, true);
+}
+
 /* reset hiscall */
 void cleanup_hiscall(void) {
+    g_free(call_backup);
+    call_backup = g_strdup(hiscall);
+
     hiscall[0] = '\0';	    /* reset hiscall and comment */
     proposed_exchange[0] = '\0';
-    countrynr = 0;
+}
+
+/* restore call */
+void restore_hiscall(void) {
+    if (call_backup) {
+	g_strlcpy(hiscall, call_backup, sizeof(hiscall));
+	g_free(comment_backup);
+	comment_backup = NULL;
+    }
+    get_proposed_exchange();
 }
 
 
 void cleanup_qso(void) {
     cleanup_hiscall();
     cleanup_comment();
+
+    g_free(comment_backup);
+    comment_backup = NULL;
+
+    g_free(call_backup);
+    call_backup = NULL;
+
     rst_reset();;	    /* reset to 599 */
 }
 
