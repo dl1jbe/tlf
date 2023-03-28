@@ -193,7 +193,9 @@ similar and modify it - then please let us know, so we can add it to the
 collection.
 
 Once the configuration files are to your liking, make sure the terminal window
-is set to 80x25 size and launch TLF from your contest directory:
+is set to at least 80x25 size (if you make active use of cluster spotting 
+make sure to try to use more lines, e.g. 80x40)
+and launch TLF from your contest directory:
 
 ```
 tlf
