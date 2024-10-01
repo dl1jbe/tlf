@@ -120,7 +120,7 @@ void log_to_disk(int from_lan) {
 
 	struct qso_t *qso = parse_qso(lan_logline);
 
-	addcall2();
+	addcall2(qso);
 
 	store_qso(logfile, lan_logline);
 	g_ptr_array_add(qso_array, qso);

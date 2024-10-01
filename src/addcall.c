@@ -211,20 +211,21 @@ int addcall(struct qso_t *qso) {
 /* ----------------------for network qso's-----------------------------------*/
 
 int excl_add_veto2;
-int addcall2(void) {
+int addcall2(struct qso_t *qso) {
 
     int cty, zone = 0;
     bool add_ok;
-    char lancopy[6];
-
-    char comment[40];
-    int bandinx;
     int pfxnumcntidx = -1;
     int pxnr = 0;
     excl_add_veto2 = 0;
 
+    char lancopy[6];
+
+    char comment[40];
+    int bandinx;
+
     /* parse copy of lan_logline */
-    struct qso_t *qso;
+//    struct qso_t *qso;
     char *tmp = g_strdup(lan_logline);
     qso = parse_qso(tmp);
     g_free(tmp);

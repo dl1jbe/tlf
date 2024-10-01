@@ -30,7 +30,7 @@ struct qso_t *collect_qso_data(void);
 bool check_veto(int countrynr);
 int lookup_country_in_pfxnummult_array(int n);
 int addcall(struct qso_t *qso);
-int addcall2(void);
+int addcall2(struct qso_t *qso);
 int get_band(char *logline);
 
 #endif /* ADDCALL_H */
