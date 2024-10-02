@@ -210,14 +210,14 @@ int addcall(struct qso_t *qso) {
 
 /* ----------------------for network qso's-----------------------------------*/
 
-int excl_add_veto2;
+bool excl_add_veto2;
 int addcall2(struct qso_t *qso) {
 
     int cty, zone = 0;
     bool add_ok;
     int pfxnumcntidx = -1;
     int pxnr = 0;
-    excl_add_veto2 = 0;
+    excl_add_veto2 = false;
 
     char lancopy[6];
 
@@ -266,7 +266,7 @@ int addcall2(struct qso_t *qso) {
 
     if (continentlist_only) {
 	if (!is_in_continentlist(dxcc_by_index(cty)->continent)) {
-	    excl_add_veto2 = 1;
+	    excl_add_veto2 = true;
 	}
     }
 
@@ -283,7 +283,7 @@ int addcall2(struct qso_t *qso) {
 
 	worked[station].band |= inxes[bandinx];	/* worked on this band */
 
-	if (excl_add_veto2 == 0) {
+	if (!excl_add_veto2) {
 
 	    if (pfxnumcntidx < 0) {
 		if (cty != 0 && (countries[cty] & inxes[bandinx]) == 0) {
@@ -328,9 +328,6 @@ int addcall2(struct qso_t *qso) {
     }
 
     addmult_lan();	/* for wysiwyg from LAN */
-
-    free_qso(qso);
-    qso = NULL;
 
     return cty;
 }

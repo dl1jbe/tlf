@@ -84,6 +84,13 @@ int setup_default(void **state) {
     return 0;
 }
 
+int teardown_default(void **state) {
+    g_free(current_qso.call);
+    g_free(current_qso.comment);
+
+    return 0;
+}
+
 int setup_addcall_pfxnum_inList(void **state) {
     int countrynr = getctynr("LZ1AB");
 
@@ -155,6 +162,7 @@ void test_add_to_worked(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(nr_worked, 1);
     assert_string_equal(worked[0].exchange, "Hi");
@@ -172,11 +180,13 @@ void test_add_to_worked_continentlistonly(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     strcpy(current_qso.call, "PY2BBB");
 
     qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(nr_worked, 2);
     assert_string_equal(worked[0].call, "LZ1AB");
@@ -188,6 +198,7 @@ void test_addcall_nopfxnum(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(addcallarea, 0);
 }
@@ -200,6 +211,7 @@ void test_addcall_pfxnum_inList(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(addcallarea, 1);
     assert_int_equal(pfxnummulti[1].qsos[1], BAND10);
@@ -216,6 +228,7 @@ void test_addcall_pfxnum_notinList(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(addcallarea, 0);
 }
@@ -229,6 +242,7 @@ void test_addcall_continentlistonly(void **state) {
 
     assert_int_equal(nr_worked, 1);
     assert_int_equal(countryscore[qso->bandindex], 1);
+    free_qso(qso);
 
     strcpy(current_qso.call, "PY2BBB");  // SA is not in the list
 
@@ -237,6 +251,7 @@ void test_addcall_continentlistonly(void **state) {
 
     assert_int_equal(nr_worked, 2);
     assert_int_equal(countryscore[qso->bandindex], 1);  // not counted
+    free_qso(qso);
 }
 
 void test_addcall_exclude_continent(void **state) {
@@ -248,6 +263,7 @@ void test_addcall_exclude_continent(void **state) {
 
     assert_int_equal(nr_worked, 1);
     assert_int_equal(countryscore[qso->bandindex], 0);  // not counted
+    free_qso(qso);
 
     strcpy(current_qso.call, "PY2BBB");
 
@@ -256,6 +272,7 @@ void test_addcall_exclude_continent(void **state) {
 
     assert_int_equal(nr_worked, 2);
     assert_int_equal(countryscore[qso->bandindex], 1);
+    free_qso(qso);
 }
 
 void test_addcall_exclude_country(void **state) {
@@ -267,6 +284,7 @@ void test_addcall_exclude_country(void **state) {
 
     assert_int_equal(nr_worked, 1);
     assert_int_equal(countryscore[qso->bandindex], 1);
+    free_qso(qso);
 
     strcpy(current_qso.call, "DL1AAA");  // DL is excluded
 
@@ -275,6 +293,7 @@ void test_addcall_exclude_country(void **state) {
 
     assert_int_equal(nr_worked, 2);
     assert_int_equal(countryscore[qso->bandindex], 1);  // not counted
+    free_qso(qso);
 }
 
 
@@ -296,6 +315,7 @@ void test_addcall2_nopfxnum(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(addcallarea, 0);
     assert_int_equal(nr_worked, 1);
@@ -319,6 +339,7 @@ void test_addcall2_pfxnum_inList(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(addcallarea, 1);
     assert_int_equal(pfxnummulti[1].qsos[1], BAND160);
@@ -331,6 +352,7 @@ void test_addcall2_pfxnum_notinList(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(addcallarea, 0);
     assert_int_equal(nr_worked, 1);
@@ -346,6 +368,7 @@ void test_add_unknown_country(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[bandinx], 0);
     assert_int_equal(countries[getctynr("LZ1AB")], 0);
@@ -357,6 +380,7 @@ void test_add_country(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[bandinx], 1);
     assert_int_equal(countries[getctynr("LZ0AA")], BAND10);
@@ -368,12 +392,14 @@ void test_add_country_2_band(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     bandinx = BANDINDEX_15;
     strcpy(current_qso.call, "LZ1AB");
 
     qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[BANDINDEX_10], 1);
     assert_int_equal(countryscore[BANDINDEX_15], 1);
@@ -386,11 +412,13 @@ void test_add_country_2_stations(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     strcpy(current_qso.call, "LZ3CD");
 
     qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[bandinx], 1);
     assert_int_equal(countries[getctynr("LZ0AA")], BAND10);
@@ -402,11 +430,13 @@ void test_add_2_countries(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     strcpy(current_qso.call, "DL1YZ");
 
     qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[BANDINDEX_10], 2);
     assert_int_equal(countries[getctynr("LZ0AA")], BAND10);
@@ -421,6 +451,7 @@ void test_add_unknown_zone(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[bandinx], 0);
     assert_int_equal(zones[15], 0);
@@ -433,6 +464,7 @@ void test_add_zone(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[bandinx], 1);
     assert_int_equal(zones[15], BAND10);
@@ -445,12 +477,14 @@ void test_add_zone_2_band(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     bandinx = BANDINDEX_15;
     strcpy(current_qso.call, "LZ1AB");
 
     qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[BANDINDEX_10], 1);
     assert_int_equal(zonescore[BANDINDEX_15], 1);
@@ -464,11 +498,13 @@ void test_add_zone_2_stations(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     strcpy(current_qso.call, "LZ3CD");
 
     qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[bandinx], 1);
     assert_int_equal(zones[15], BAND10);
@@ -481,12 +517,14 @@ void test_add_2_zones(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     strcpy(current_qso.call, "DL1YZ");
     strcpy(current_qso.comment, "14");
 
     qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[BANDINDEX_10], 2);
     assert_int_equal(zones[14], BAND10);
@@ -502,6 +540,7 @@ void test_add2_unknown_country(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[bandinx], 0);
     assert_int_equal(countries[getctynr("LZ1AB")], 0);
@@ -512,6 +551,7 @@ void test_add2_country(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[BANDINDEX_160], 1);
     assert_int_equal(countries[getctynr("LZ0AA")], BAND160);
@@ -522,12 +562,14 @@ void test_add2_country_2_band(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     strcpy(lan_logline, logline);
     memcpy(lan_logline, " 15", 3);		/* patch to 15m */
     qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[BANDINDEX_160], 1);
     assert_int_equal(countryscore[BANDINDEX_15], 1);
@@ -539,12 +581,14 @@ void test_add2_country_2_stations(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     strcpy(lan_logline, logline);
     lan_logline[31] = '3';		/* modify to LZ3AB */
     qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[BANDINDEX_160], 1);
     assert_int_equal(countries[getctynr("LZ0AA")], BAND160);
@@ -555,11 +599,13 @@ void test_add2_2_countries(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     strcpy(lan_logline, logline_HA);
     qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(countryscore[BANDINDEX_160], 2);
     assert_int_equal(countries[getctynr("LZ0AA")], BAND160);
@@ -576,6 +622,7 @@ void test_add2_unknown_zone(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[BANDINDEX_160], 0);
     assert_int_equal(zones[15], 0);
@@ -586,6 +633,7 @@ void test_add2_zone(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[BANDINDEX_160], 1);
     assert_int_equal(zones[20], BAND160);
@@ -596,12 +644,14 @@ void test_add2_zone_2_band(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     strcpy(lan_logline, logline);
     memcpy(lan_logline, " 15", 3);
     qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[BANDINDEX_160], 1);
     assert_int_equal(zonescore[BANDINDEX_15], 1);
@@ -613,12 +663,14 @@ void test_add2_zone_2_stations(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     strcpy(lan_logline, logline);
     lan_logline[31] = '3';		/* modify to LZ3AB */
     qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[BANDINDEX_160], 1);
     assert_int_equal(zones[20], BAND160);
@@ -629,11 +681,13 @@ void test_add2_2_zones(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     strcpy(lan_logline, logline_HA);
     qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(zonescore[BANDINDEX_160], 2);
     assert_int_equal(zones[19], BAND160);
@@ -648,6 +702,7 @@ void test_add_warc(void **state) {
 
     struct qso_t *qso = collect_qso_data();
     addcall(qso);
+    free_qso(qso);
 
     assert_int_equal(countries[getctynr("LZ0AA")], BAND12);
     assert_int_equal(new_cty, getctynr("LZ1AB"));
@@ -661,6 +716,7 @@ void test_add2_warc(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(countries[getctynr("LZ0AA")], BAND30);
     assert_int_equal(zones[20], BAND30);
@@ -673,6 +729,7 @@ void test_addcall2_continentlistonly(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(excl_add_veto2, true);
 
@@ -680,6 +737,7 @@ void test_addcall2_continentlistonly(void **state) {
     qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(excl_add_veto2, false);
 }
@@ -690,6 +748,7 @@ void test_addcall2_exclude_continent(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(excl_add_veto2, true);
 
@@ -697,6 +756,7 @@ void test_addcall2_exclude_continent(void **state) {
     qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(excl_add_veto2, false);
 }
@@ -707,6 +767,7 @@ void test_addcall2_exclude_country(void **state) {
     struct qso_t *qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(excl_add_veto2, false);
 
@@ -714,6 +775,7 @@ void test_addcall2_exclude_country(void **state) {
     qso = parse_qso(lan_logline);
 
     addcall2(qso);
+    free_qso(qso);
 
     assert_int_equal(excl_add_veto2, true);
 }
