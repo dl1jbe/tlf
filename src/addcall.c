@@ -224,12 +224,6 @@ int addcall2(struct qso_t *qso) {
     char comment[40];
     int bandinx;
 
-    /* parse copy of lan_logline */
-//    struct qso_t *qso;
-    char *tmp = g_strdup(lan_logline);
-    qso = parse_qso(tmp);
-    g_free(tmp);
-
 
     g_strlcpy(comment, qso->comment, sizeof(comment));
     qso->comment[0] = '\0';	/* Do not update station comment from lan */
