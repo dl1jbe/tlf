@@ -308,12 +308,12 @@ int addcall2(struct qso_t *qso) {
     }
     if (CONTEST_IS(WPX) || pfxmult || pfxmultab) {
 
-	if (lan_logline[68] != ' ') {
+	if (qso->logline[68] != ' ') {
 
 	    strcpy(lancopy, "     ");
 
 	    /* max 5 char for prefix written in makelogline */
-	    strncpy(lancopy, lan_logline + 68, 5);
+	    strncpy(lancopy, qso->logline + 68, 5);
 
 	    for (int i = 0; i <= 5; i++) {	// terminate at first space
 
@@ -322,8 +322,6 @@ int addcall2(struct qso_t *qso) {
 		    break;
 		}
 	    }
-
-	    bandinx = log_get_band(lan_logline);
 
 	    add_pfx(lancopy, bandinx);
 	}
